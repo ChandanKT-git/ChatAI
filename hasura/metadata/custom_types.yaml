@@ -1,0 +1,13 @@
+custom_types:
+  input_objects: []
+  objects:
+    - name: MessageResponse
+      fields:
+        - name: response
+          type: String!
+        - name: success
+          type: Boolean!
+        - name: error
+          type: String
+  scalars: []
+  enums: []

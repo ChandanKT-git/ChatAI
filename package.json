@@ -1,0 +1,39 @@
+{
+  "name": "ai-chatbot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx,ts,tsx",
+    "lint:fix": "eslint . --ext js,jsx,ts,tsx --fix"
+  },
+  "dependencies": {
+    "@nhost/react": "^2.0.0",
+    "@nhost/react-auth": "^2.0.0",
+    "@nhost/nhost-js": "^2.0.0",
+    "@apollo/client": "^3.8.0",
+    "graphql": "^16.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "lucide-react": "^0.263.1",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^1.14.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0"
+  }
+}

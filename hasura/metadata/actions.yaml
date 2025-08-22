@@ -1,0 +1,15 @@
+actions:
+  - name: sendMessage
+    definition:
+      kind: synchronous
+      handler: '{{NHOST_BACKEND_URL}}/actions/sendMessage'
+      forward_client_headers: true
+    permissions:
+      - role: user
+    type: mutation
+    arguments:
+      - name: chat_id
+        type: uuid!
+      - name: message
+        type: String!
+    output_type: MessageResponse

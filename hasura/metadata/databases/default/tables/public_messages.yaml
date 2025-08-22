@@ -1,0 +1,43 @@
+table:
+  name: messages
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - content
+        - role
+        - created_at
+        - chat_id
+      filter:
+        chat:
+          user_id:
+            _eq: X-Hasura-User-Id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        chat:
+          user_id:
+            _eq: X-Hasura-User-Id
+      columns:
+        - content
+        - role
+        - chat_id
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - content
+      filter:
+        chat:
+          user_id:
+            _eq: X-Hasura-User-Id
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        chat:
+          user_id:
+            _eq: X-Hasura-User-Id
