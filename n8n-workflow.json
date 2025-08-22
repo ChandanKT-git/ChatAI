@@ -1,5 +1,4 @@
 {
-  "name": "AI Chatbot Workflow",
   "nodes": [
     {
       "parameters": {
@@ -8,11 +7,14 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "webhook-trigger",
+      "id": "abd77e08-6907-464b-a13d-a5d8494892e9",
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [240, 300],
+      "position": [
+        -960,
+        336
+      ],
       "webhookId": "ai-chatbot-webhook"
     },
     {
@@ -26,16 +28,18 @@
           ]
         }
       },
-      "id": "validate-auth",
+      "id": "f5d1415e-2d85-42e5-8120-7411ee77098c",
       "name": "Validate Auth",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [460, 300]
+      "position": [
+        -736,
+        336
+      ]
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "url": "https://hledgkxkscluffuwrsxw.graphql.ap-south-1.nhost.run/v1/graphql",
+        "url": "https://ggpdfdwwtvdcudrqfqcw.graphql.ap-south-1.nhost.run/v1/graphql",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
@@ -56,25 +60,28 @@
           "parameters": [
             {
               "name": "query",
-              "value": "query GetChatUser($chatId: uuid!) { chats_by_pk(id: $chatId) { user_id } }"
+              "value": "=query GetChatUser($chatId: uuid!) { chats_by_pk(id: $chatId) { user_id } }"
             },
             {
               "name": "variables",
-              "value": "{\"chatId\": \"{{ $json.body.chat_id }}\"}"
+              "value": "={\"chatId\": \"{{ $json.body.chat_id }}\"}"
             }
           ]
         },
         "options": {}
       },
-      "id": "get-chat-user",
+      "id": "50ad4a33-e925-43da-b2fb-9d5f1a0f62c3",
       "name": "Get Chat User",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [680, 200],
+      "typeVersion": 4,
+      "position": [
+        -512,
+        240
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "nhost-auth",
-          "name": "Nhost Auth"
+          "id": "A4ic2GKmIbLuTMSJ",
+          "name": "Header Auth account 2"
         }
       }
     },
@@ -84,21 +91,22 @@
           "string": [
             {
               "value1": "={{ $json.data.chats_by_pk.user_id }}",
-              "value2": "={{ $json.headers['x-hasura-user-id'] }}",
-              "operation": "equal"
+              "value2": "={{ $json.headers['x-hasura-user-id'] }}"
             }
           ]
         }
       },
-      "id": "validate-ownership",
+      "id": "3863fe60-b6a9-4d58-8806-369bc90e2c8b",
       "name": "Validate Ownership",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [900, 200]
+      "position": [
+        -288,
+        240
+      ]
     },
     {
       "parameters": {
-        "httpMethod": "POST",
         "url": "https://openrouter.ai/api/v1/chat/completions",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -111,7 +119,7 @@
             },
             {
               "name": "Authorization",
-              "value": "Bearer {{ $env.OPENROUTER_API_KEY }}"
+              "value": "=Bearer {{ $vars.OPENROUTER_API_KEY }}"
             },
             {
               "name": "HTTP-Referer",
@@ -128,11 +136,11 @@
           "parameters": [
             {
               "name": "model",
-              "value": "openai/gpt-3.5-turbo"
+              "value": "deepseek/deepseek-chat"
             },
             {
               "name": "messages",
-              "value": "[{\"role\": \"user\", \"content\": \"{{ $json.body.message }}\"}]"
+              "value": "=[{\"role\": \"user\", \"content\": \"{{ $json.body.message }}\"}]"
             },
             {
               "name": "max_tokens",
@@ -146,22 +154,24 @@
         },
         "options": {}
       },
-      "id": "call-openrouter",
+      "id": "b9fec768-af8b-4706-9165-a91b0fba449d",
       "name": "Call OpenRouter",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [1120, 200],
+      "typeVersion": 4,
+      "position": [
+        -64,
+        144
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "openrouter-auth",
-          "name": "OpenRouter Auth"
+          "id": "A4ic2GKmIbLuTMSJ",
+          "name": "Header Auth account 2"
         }
       }
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "url": "https://hledgkxkscluffuwrsxw.graphql.ap-south-1.nhost.run/v1/graphql",
+        "url": "https://ggpdfdwwtvdcudrqfqcw.graphql.ap-south-1.nhost.run/v1/graphql",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
@@ -172,8 +182,8 @@
               "value": "application/json"
             },
             {
-              "name": "Authorization",
-              "value": "={{ $json.headers.authorization }}"
+              "name": "x-hasura-admin-secret",
+              "value": "={{ $vars.HASURA_ADMIN_SECRET }}}}"
             }
           ]
         },
@@ -182,60 +192,75 @@
           "parameters": [
             {
               "name": "query",
-              "value": "mutation InsertMessage($chatId: uuid!, $content: String!, $role: String!) { insert_messages_one(object: { chat_id: $chatId, content: $content, role: $role }) { id } }"
+              "value": "=mutation InsertMessage($chatId: uuid!, $content: String!, $role: String!) { insert_messages_one(object: { chat_id: $chatId, content: $content, role: $role }) { id } }"
             },
             {
               "name": "variables",
-              "value": "{\"chatId\": \"{{ $json.body.chat_id }}\", \"content\": \"{{ $('Call OpenRouter').item.json.choices[0].message.content }}\", \"role\": \"assistant\"}"
+              "value": "={\"chatId\": \"{{ $json.body.chat_id }}\", \"content\": \"{{ $('Call OpenRouter').item.json.choices[0].message.content }}\", \"role\": \"assistant\"}"
             }
           ]
         },
         "options": {}
       },
-      "id": "save-ai-response",
+      "id": "1cbef583-3a0a-446d-bbbb-d81967d337d4",
       "name": "Save AI Response",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [1340, 200],
+      "typeVersion": 4,
+      "position": [
+        160,
+        144
+      ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "nhost-auth",
-          "name": "Nhost Auth"
+          "id": "A4ic2GKmIbLuTMSJ",
+          "name": "Header Auth account 2"
         }
       }
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "{\"success\": true, \"response\": \"{{ $('Call OpenRouter').item.json.choices[0].message.content }}\"}"
+        "responseBody": "{\"success\": true, \"response\": \"{{ $('Call OpenRouter').item.json.choices[0].message.content }}\"}",
+        "options": {}
       },
-      "id": "success-response",
+      "id": "f2db3921-8d5a-43ea-869f-017be9bdeac3",
       "name": "Success Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1560, 200]
+      "position": [
+        384,
+        144
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "{\"success\": false, \"error\": \"Unauthorized\"}"
+        "responseBody": "{\"success\": false, \"error\": \"Unauthorized\"}",
+        "options": {}
       },
-      "id": "unauthorized-response",
+      "id": "bb637653-99cb-4e6e-ae72-761009105518",
       "name": "Unauthorized Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [680, 400]
+      "position": [
+        -512,
+        432
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "{\"success\": false, \"error\": \"Chat ownership validation failed\"}"
+        "responseBody": "{\"success\": false, \"error\": \"Chat ownership validation failed\"}",
+        "options": {}
       },
-      "id": "ownership-error-response",
+      "id": "749d7a48-4593-4f6c-ac22-eb83bde8fec5",
       "name": "Ownership Error Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [900, 400]
+      "position": [
+        -64,
+        336
+      ]
     }
   ],
   "connections": {
@@ -321,12 +346,7 @@
     }
   },
   "pinData": {},
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
-  "tags": [],
-  "triggerCount": 1,
-  "updatedAt": "2024-01-01T00:00:00.000Z",
-  "versionId": "1"
+  "meta": {
+    "instanceId": "28919dd9e6c9cd9ee2243b67d7c7fc78d75c95583d084a097e02efb7a111a34e"
+  }
 }
